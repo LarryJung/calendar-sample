@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  mysql:
+    container_name: mysql_calendar
+    image: mysql/mysql-server:5.7
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: "mysql_calendar"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      TZ: 'Asia/Seoul'
+    ports:
+      - "3306:3306"
+# https://seokhyun2.tistory.com/61
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
