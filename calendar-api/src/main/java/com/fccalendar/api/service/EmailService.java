@@ -26,10 +26,9 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message);
             helper.setFrom("noreply@baeldung.com");
             helper.setTo(req.getUserEmail());
-            helper.setSubject("[" + DateTimeFormatter.ofPattern("\"yyyy년 MM월 dd일(E) a HH시 " +
-                                                                        "mm분\"")
-                                                     .format(req.getStartAt()) + "]" + req.getTitle());
-            helper.setText("알람");
+            helper.setSubject("[" + DateTimeFormatter.ofPattern("yyyy년 MM월 dd일(E) a HH시 mm분")
+                                                     .format(req.getStartAt()) + "] " + req.getTitle());
+            helper.setText("알람!");
         };
         emailSender.send(preparator);
     }

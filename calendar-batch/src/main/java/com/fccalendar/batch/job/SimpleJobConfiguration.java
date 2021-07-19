@@ -6,6 +6,7 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
@@ -24,42 +25,74 @@ public class SimpleJobConfiguration {
     private final StepBuilderFactory stepBuilderFactory;
     private final DataSource dataSource;
 
-    private static final int chunkSize = 10;
+    private static final int CHUNK_SIZE = 10;
 
     @Bean
-    public Job jdbcCursorItemReaderJob() {
-        return jobBuilderFactory.get("jdbcCursorItemReaderJob")
-                                .start(jdbcCursorItemReaderStep())
+    public Job sendEmailAlarmJob() {
+        return jobBuilderFactory.get("sendEmailAlarmJob")
+                                .incrementer(new RunIdIncrementer())
+                                .start(sendEngagementAlarmStep())
+                                .next(sendScheduleAlarmStep())
                                 .build();
     }
 
     @Bean
-    public Step jdbcCursorItemReaderStep() {
-        return stepBuilderFactory.get("jdbcCursorItemReaderStep")
-                                 .<SendMailBatchReq, SendMailBatchReq>chunk(chunkSize)
-                                 .reader(jdbcCursorItemReader())
-                                 .writer(jdbcCursorItemWriter())
+    public Step sendEngagementAlarmStep() {
+        return stepBuilderFactory.get("sendEngagementAlarmStep")
+                                 .<SendMailBatchReq, SendMailBatchReq>chunk(CHUNK_SIZE)
+                                 .reader(sendEngagementAlarmReader())
+                                 .writer(sendEmailAlarmWriter())
+                                 .allowStartIfComplete(true)
                                  .build();
     }
 
     @Bean
-    public JdbcCursorItemReader<SendMailBatchReq> jdbcCursorItemReader() {
+    public Step sendScheduleAlarmStep() {
+        return stepBuilderFactory.get("sendScheduleAlarmStep")
+                                 .<SendMailBatchReq, SendMailBatchReq>chunk(CHUNK_SIZE)
+                                 .reader(sendScheduleAlarmReader())
+                                 .writer(sendEmailAlarmWriter())
+                                 .allowStartIfComplete(true)
+                                 .build();
+    }
+
+    @Bean
+    public JdbcCursorItemReader<SendMailBatchReq> sendEngagementAlarmReader() {
         return new JdbcCursorItemReaderBuilder<SendMailBatchReq>()
-                .fetchSize(chunkSize)
+                .fetchSize(CHUNK_SIZE)
                 .dataSource(dataSource)
                 .rowMapper(new BeanPropertyRowMapper<>(SendMailBatchReq.class))
-                .sql("select s.id, s.start_at, s.title, u.email as attendee_email\n" +
+                .sql("select s.id, s.start_at, s.title, u.email as user_email\n" +
                              "from schedules s\n" +
                              "         left join engagements e on s.id = e.schedule_id\n" +
                              "         left join users u on u.id = e.attendee_id\n" +
-                             "where date_format(s.start_at, '%Y-%m-%d %H:%i') = date_format" +
-                             "(date_add(now(), interval 10 minute), '%Y-%m-%d %H:%i')\n" +
+                             "where s.start_at >= date_format(date_add(now(), interval 10 minute)" +
+                             ", '%Y-%m-%d %H:%i')\n" +
+                             "  and s.start_at < date_format(date_add(now(), interval 11 minute)," +
+                             " '%Y-%m-%d %H:%i')\n" +
                              "  and e.status = 'ACCEPTED'")
                 .name("jdbcCursorItemReader")
                 .build();
     }
 
-    private ItemWriter<SendMailBatchReq> jdbcCursorItemWriter() {
+    @Bean
+    public JdbcCursorItemReader<SendMailBatchReq> sendScheduleAlarmReader() {
+        return new JdbcCursorItemReaderBuilder<SendMailBatchReq>()
+                .fetchSize(CHUNK_SIZE)
+                .dataSource(dataSource)
+                .rowMapper(new BeanPropertyRowMapper<>(SendMailBatchReq.class))
+                .sql("select s.id, s.start_at, s.title, u.email as user_email\n" +
+                             "from schedules s\n" +
+                             "    left join users u on u.id = s.writer_id\n" +
+                             "where s.start_at >= date_format(date_add(now(), interval 10 minute)" +
+                             ", '%Y-%m-%d %H:%i')\n" +
+                             "  and s.start_at < date_format(date_add(now(), interval 11 minute)," +
+                             " '%Y-%m-%d %H:%i')")
+                .name("jdbcCursorItemReader")
+                .build();
+    }
+
+    private ItemWriter<SendMailBatchReq> sendEmailAlarmWriter() {
         return list -> new RestTemplate().postForObject("http://localhost:8080/api/batch/send/mail",
                                                         list,
                                                         Object.class);

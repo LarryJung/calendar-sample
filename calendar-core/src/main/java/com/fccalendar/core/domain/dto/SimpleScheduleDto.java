@@ -1,7 +1,6 @@
 package com.fccalendar.core.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.larry.lallender.core.domain.entity.ScheduleType;
+import com.fccalendar.core.domain.ScheduleType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +8,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SimpleScheduleDto {
     private Long id;
     private String title;

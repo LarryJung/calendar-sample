@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>My Calendar</title>
+    <style>
+        body {
+            background-color: #f9fafb;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            /*margin: 0;*/
+            padding: 50px;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 0 0 20px;
+        }
+
+        .baseButton {
+            border: 2px solid #777777;
+            padding: 15px 32px;
+            text-align: center;
+        }
+
+        form {
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px solid #777777;
+        }
+
+        form div {
+            margin-bottom: 10px;
+            padding-bottom: 20px;
+        }
+
+        form input:focus {
+            outline: 0;
+            border-color: #777;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h2>My Calendar</h2>
+    <button class="baseButton" id="signUpBtn" style="display: none">Sign Up</button>
+    <button class="baseButton" id="signInBtn" style="display: none">Sign In</button>
+    <button class="baseButton" id="signOutBtn" style="display: none">Sign Out</button>
+    <div>
+        <form id="signIn-form" style="display: none">
+            <div>
+                <label for="signIn-email">이메일</label>
+                <input id="signIn-email" type="email" name="이메일">
+            </div>
+            <div>
+                <label for="signIn-pw">비밀번호</label>
+                <input id="signIn-pw" type="password" name="비밀번호">
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <form id="signUp-form" style="display: none">
+            <div>
+                <label for="signUp-name">이름</label>
+                <input id="signUp-name" type="text" name="이름">
+            </div>
+            <div>
+                <label for="signUp-email">이메일</label>
+                <input id="signUp-email" type="email" name="이메일">
+            </div>
+            <div>
+                <label for="signUp-pw">비밀번호</label>
+                <input id="signUp-pw" type="password" name="비밀번호">
+            </div>
+            <div>
+                <label for="signUp-birthday">생년월일</label>
+                <input id="signUp-birthday" type="date" name="생년월일">
+            </div>
+            <button id="signUp-submit" type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+        integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script th:inline="javascript" type="text/javascript">
+    //<![CDATA[
+    const isSignIn = [[${isSignIn}]];
+    const redirect = [[${redirect}]];
+    const signUpBtn = document.getElementById("signUpBtn");
+    const signInBtn = document.getElementById("signInBtn");
+    const signOutBtn = document.getElementById("signOutBtn");
+    const signUpForm = document.getElementById("signUp-form")
+    const signInForm = document.getElementById("signIn-form")
+
+    if (isSignIn) {
+        signOutBtn.style.display = 'inline-block'
+        if (!!redirect) {
+            window.location.href = redirect;
+        }
+    } else {
+        signUpBtn.style.display = 'inline-block'
+        signInBtn.style.display = 'inline-block'
+    }
+
+    signUpBtn.addEventListener('click', () => {
+        if (signUpForm.style.display === 'none') {
+            signUpForm.style.display = 'block';
+        } else {
+            signUpForm.style.display = 'none';
+        }
+    })
+    signInBtn.addEventListener('click', () => {
+        if (signInForm.style.display === 'none') {
+            signInForm.style.display = 'block';
+        } else {
+            signInForm.style.display = 'none';
+        }
+    })
+
+    signUpForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        axios.post("/api/sign-up", {
+            email: document.getElementById("signUp-email").value,
+            name: document.getElementById("signUp-name").value,
+            password: document.getElementById("signUp-pw").value,
+            birthday: document.getElementById("signUp-birthday").value
+        }).then((res) => {
+            console.log(res)
+            location.reload();
+        }).catch((e) => {
+            alert(e.response.data.errorMessage)
+        })
+    })
+
+    signInForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        axios.post("/api/sign-in", {
+            email: document.getElementById("signIn-email").value,
+            password: document.getElementById("signIn-pw").value
+        }).then((res) => {
+            console.log(res)
+            location.reload();
+        }).catch((e) => {
+            console.log(e)
+            alert(e.response.data.errorMessage)
+        })
+    })
+
+    signOutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        axios.post("/api/sign-out")
+            .then((res) => {
+                console.log(res)
+                location.reload()
+            })
+    })
+    //]]>
+</script>
+
+</body>
+</html>

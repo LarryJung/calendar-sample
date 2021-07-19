@@ -3,7 +3,7 @@ spring:
     default: dev
   thymeleaf:
     cache: false
-    prefix: file:src/main/resources/templates/
+    prefix: file:calendar-api/src/main/resources/templates/
   web:
     resources:
       cache:
@@ -20,3 +20,16 @@ spring:
           auth: true
           starttls:
             enable: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/calendar_db?useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: ''
+  jpa:
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
