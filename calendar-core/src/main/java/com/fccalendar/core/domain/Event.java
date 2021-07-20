@@ -13,7 +13,6 @@ public class Event {
     private final Schedule schedule;
     private final LocalDateTime startAt;
     private final LocalDateTime endAt;
-    private final LocalDateTime createdAt;
     private final String title;
     private final String description;
     private final User writer;

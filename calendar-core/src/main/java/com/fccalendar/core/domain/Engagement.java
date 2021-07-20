@@ -12,11 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table(name = "engagements")
-public class Engagement {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Engagement extends BaseEntity {
     @JoinColumn(name = "schedule_id")
     @ManyToOne(optional = false)
     private Schedule schedule;
@@ -56,7 +52,7 @@ public class Engagement {
     }
 
     public EngagementDto toDto() {
-        return new EngagementDto(id, getEvent().toDto(), attendee.toDto(), status);
+        return new EngagementDto(super.getId(), getEvent().toDto(), attendee.toDto(), status);
     }
 
     public boolean isOverlapped(LocalDate date) {

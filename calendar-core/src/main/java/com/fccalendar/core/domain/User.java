@@ -9,22 +9,26 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Builder
 @Getter
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-@AllArgsConstructor
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
     private String name;
     private String email;
     private String password;
     private LocalDate birthday;
 
+    @Builder
+    public User(Long id, String name, String email, String password, LocalDate birthday) {
+        super(id);
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.birthday = birthday;
+    }
+
     public UserDto toDto() {
-        return new UserDto(id, name, email, birthday);
+        return new UserDto(super.getId(), name, email, birthday);
     }
 }

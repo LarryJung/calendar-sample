@@ -16,10 +16,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "schedules")
-public class Schedule {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Schedule extends BaseEntity{
+
     private LocalDateTime startAt;
     private LocalDateTime endAt;
     private String title;
@@ -31,7 +29,6 @@ public class Schedule {
 
     @Enumerated(value = EnumType.STRING)
     private ScheduleType scheduleType;
-    private LocalDateTime createdAt;
 
     public static Schedule event(LocalDateTime startAt, LocalDateTime endAt, String title,
                                  String description, User writer) {
@@ -42,7 +39,6 @@ public class Schedule {
                        .description(description)
                        .writer(writer)
                        .scheduleType(ScheduleType.EVENT)
-                       .createdAt(LocalDateTime.now())
                        .build();
     }
 
@@ -54,7 +50,6 @@ public class Schedule {
                        .description(description)
                        .writer(writer)
                        .scheduleType(ScheduleType.TASK)
-                       .createdAt(LocalDateTime.now())
                        .build();
     }
 
@@ -64,7 +59,6 @@ public class Schedule {
                        .title(title)
                        .writer(writer)
                        .scheduleType(ScheduleType.NOTIFICATION)
-                       .createdAt(LocalDateTime.now())
                        .build();
     }
 
@@ -73,7 +67,7 @@ public class Schedule {
     }
 
     public Event toEvent() {
-        return new Event(this, startAt, endAt, createdAt, title, description, writer);
+        return new Event(this, startAt, endAt, title, description, writer);
     }
 
     public Notification toNotification() {
