@@ -63,15 +63,15 @@ public class Schedule extends BaseEntity{
     }
 
     public Task toTask() {
-        return new Task(this, writer, title, description, startAt);
+        return new Task(this);
     }
 
     public Event toEvent() {
-        return new Event(this, startAt, endAt, title, description, writer);
+        return new Event(this);
     }
 
     public Notification toNotification() {
-        return new Notification(this, writer, title, startAt);
+        return new Notification(this);
     }
 
     public ScheduleDto toDto() {

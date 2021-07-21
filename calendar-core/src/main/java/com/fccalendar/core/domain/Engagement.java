@@ -33,6 +33,7 @@ public class Engagement extends BaseEntity {
     public boolean isRequested() {
         return this.status == RequestStatus.REQUESTED;
     }
+
     public Engagement accept() {
         this.status = RequestStatus.ACCEPTED;
         return this;
