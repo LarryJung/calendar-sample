@@ -25,10 +25,10 @@ public class NotificationCreateReq {
         if (repeatInfo == null) {
             return Collections.singletonList(notifyAt);
         }
-        return IntStream.range(0, repeatInfo.repeatTimes)
+        return IntStream.range(0, repeatInfo.times)
                         .mapToObj(i -> {
-                                      long increment = (long) repeatInfo.repeatPeriod.unit * i;
-                                      switch (repeatInfo.repeatPeriod.timeUnit) {
+                                      long increment = (long) repeatInfo.interval.intervalValue * i;
+                                      switch (repeatInfo.interval.timeUnit) {
                                           case DAY:
                                               return notifyAt.plusDays(increment);
                                           case WEEK:
@@ -47,13 +47,13 @@ public class NotificationCreateReq {
 
     @Data
     public static class RepeatInfo {
-        private final RepeatPeriod repeatPeriod;
-        private final int repeatTimes;
+        private final Interval interval;
+        private final int times;
     }
 
     @Data
-    public static class RepeatPeriod {
-        private final int unit;
+    public static class Interval {
+        private final int intervalValue;
         private final TimeUnit timeUnit;
     }
 }

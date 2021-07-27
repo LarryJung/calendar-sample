@@ -1,9 +1,9 @@
 package com.fccalendar.api.service;
 
 import com.fccalendar.api.dto.AuthUser;
-import com.fccalendar.api.dto.ReplyEngagementReq;
 import com.fccalendar.core.domain.Engagement;
 import com.fccalendar.core.domain.RequestStatus;
+import com.fccalendar.core.domain.dto.RequestReplyType;
 import com.fccalendar.core.domain.repository.EngagementRepository;
 import com.fccalendar.core.exception.CalendarException;
 import com.fccalendar.core.exception.ErrorCode;
@@ -18,8 +18,9 @@ public class EngagementService {
 
     @Transactional
     public RequestStatus update(AuthUser authUser,
-                                ReplyEngagementReq replyEngagementReq) {
-        return engagementRepository.findById(replyEngagementReq.getEngagementId())
+                                Long engagementId,
+                                RequestReplyType requestReplyType) {
+        return engagementRepository.findById(engagementId)
                                    .filter(Engagement::isRequested)
                                    .map(engagement -> {
                                        if (!engagement.getAttendee()
@@ -27,7 +28,7 @@ public class EngagementService {
                                                       .equals(authUser.getId())) {
                                            return null;
                                        }
-                                       switch (replyEngagementReq.getType()) {
+                                       switch (requestReplyType) {
                                            case ACCEPT:
                                                return engagement.accept();
                                            case REJECT:

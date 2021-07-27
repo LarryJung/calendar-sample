@@ -25,7 +25,7 @@ public class NotificationCreateReqTest {
         NotificationCreateReq req = new NotificationCreateReq("titie",
                                                               time,
                                                               new NotificationCreateReq.RepeatInfo(
-                                                                      new NotificationCreateReq.RepeatPeriod(
+                                                                      new NotificationCreateReq.Interval(
                                                                               1,
                                                                               TimeUnit.DAY),
                                                                       3
@@ -40,7 +40,7 @@ public class NotificationCreateReqTest {
         NotificationCreateReq req = new NotificationCreateReq("titie",
                                                               time,
                                                               new NotificationCreateReq.RepeatInfo(
-                                                                      new NotificationCreateReq.RepeatPeriod(
+                                                                      new NotificationCreateReq.Interval(
                                                                               2,
                                                                               TimeUnit.WEEK),
                                                                       3
@@ -56,7 +56,7 @@ public class NotificationCreateReqTest {
         NotificationCreateReq req = new NotificationCreateReq("titie",
                                                               time,
                                                               new NotificationCreateReq.RepeatInfo(
-                                                                      new NotificationCreateReq.RepeatPeriod(
+                                                                      new NotificationCreateReq.Interval(
                                                                               1,
                                                                               TimeUnit.MONTH),
                                                                       3
@@ -72,7 +72,7 @@ public class NotificationCreateReqTest {
         NotificationCreateReq req = new NotificationCreateReq("titie",
                                                               time,
                                                               new NotificationCreateReq.RepeatInfo(
-                                                                      new NotificationCreateReq.RepeatPeriod(
+                                                                      new NotificationCreateReq.Interval(
                                                                               1,
                                                                               TimeUnit.YEAR),
                                                                       3

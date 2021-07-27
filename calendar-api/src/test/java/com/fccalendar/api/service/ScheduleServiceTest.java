@@ -218,7 +218,7 @@ public class ScheduleServiceTest {
                                                                                                "스프링 공부",
                                                                                                time1,
                                                                                                new NotificationCreateReq.RepeatInfo(
-                                                                                                       new NotificationCreateReq.RepeatPeriod(
+                                                                                                       new NotificationCreateReq.Interval(
                                                                                                                1,
                                                                                                                TimeUnit.DAY),
                                                                                                        3

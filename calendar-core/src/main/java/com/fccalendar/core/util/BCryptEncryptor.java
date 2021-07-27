@@ -13,8 +13,7 @@ public class BCryptEncryptor implements Encryptor {
     @Override
     public boolean isMatch(String origin, String hashed) {
         try {
-            return BCrypt.checkpw(origin,
-                                  hashed);
+            return BCrypt.checkpw(origin, hashed);
         } catch (Exception e) { // 여러 예외가 있다.
             return false;
         }
