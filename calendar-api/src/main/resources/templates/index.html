@@ -3,81 +3,93 @@
 <head>
     <meta charset="UTF-8"/>
     <title>My Calendar</title>
+    <script src="https://apis.google.com/js/client:platform.js" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
     <style>
         body {
-            background-color: #f9fafb;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            /*margin: 0;*/
-            padding: 50px;
+            background: #007bff;
+            background: linear-gradient(to right, rgb(0, 150, 230), rgb(48, 229, 242));
         }
 
-        h2 {
-            text-align: center;
-            margin: 0 0 20px;
-        }
-
-        .baseButton {
-            border: 2px solid #777777;
-            padding: 15px 32px;
-            text-align: center;
-        }
-
-        form {
-            margin-top: 20px;
-            padding: 20px;
-            border: 2px solid #777777;
-        }
-
-        form div {
-            margin-bottom: 10px;
-            padding-bottom: 20px;
-        }
-
-        form input:focus {
-            outline: 0;
-            border-color: #777;
+        .btn-login {
+            font-size: 0.9rem;
+            letter-spacing: 0.05rem;
+            padding: 0.75rem 1rem;
         }
     </style>
 </head>
 <body>
-<div>
-    <h2>My Calendar</h2>
-    <button class="baseButton" id="signUpBtn" style="display: none">Sign Up</button>
-    <button class="baseButton" id="signInBtn" style="display: none">Sign In</button>
-    <button class="baseButton" id="signOutBtn" style="display: none">Sign Out</button>
-    <div>
-        <form id="signIn-form" style="display: none">
-            <div>
-                <label for="signIn-email">이메일</label>
-                <input id="signIn-email" type="email" name="이메일">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card border-0 shadow rounded-3 my-5">
+                <div class="card-body p-4 p-sm-5" id="signIn-form" style="display: none">
+                    <h5 class="card-title text-center mb-5 fw-light fs-4">Sign In</h5>
+                    <form>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="signIn-email"
+                                   placeholder="name@example.com">
+                            <label for="signIn-email">이메일</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="signIn-pw" placeholder="Password">
+                            <label for="signIn-pw">비밀번호</label>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Sign
+                                in
+                            </button>
+                        </div>
+                        <hr class="my-4">
+                        <div class="d-flex justify-content-end">
+                            <p>회원이 아니시라구요?&nbsp;</p><a href="javascript:void(0);" onclick="viewSignUp()">가입하기</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body p-4 p-sm-5" id="signUp-form" style="display: none">
+                    <h5 class="card-title text-center mb-5 fw-light fs-4">Sign Up</h5>
+                    <form>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="signUp-name" placeholder="이름">
+                            <label for="signUp-name">이름</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="signUp-email"
+                                   placeholder="name@example.com">
+                            <label for="signUp-email">이메일</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="signUp-pw" placeholder="Password">
+                            <label for="signUp-pw">비밀번호</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="signUp-birthday" placeholder="2021-08-01">
+                            <label for="signUp-birthday">생년월일</label>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-primary btn-login text-uppercase fw-bold" type="submit">Sign
+                                Up
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body p-4 p-sm-5" id="signOut-form" style="display: none">
+                    <div class="d-grid">
+                        <button class="btn btn-primary btn-login text-uppercase fw-bold" onclick="signOut()">Sign
+                            Out
+                        </button>
+                    </div>
+
+                </div>
             </div>
-            <div>
-                <label for="signIn-pw">비밀번호</label>
-                <input id="signIn-pw" type="password" name="비밀번호">
-            </div>
-            <button type="submit">Submit</button>
-        </form>
-        <form id="signUp-form" style="display: none">
-            <div>
-                <label for="signUp-name">이름</label>
-                <input id="signUp-name" type="text" name="이름">
-            </div>
-            <div>
-                <label for="signUp-email">이메일</label>
-                <input id="signUp-email" type="email" name="이메일">
-            </div>
-            <div>
-                <label for="signUp-pw">비밀번호</label>
-                <input id="signUp-pw" type="password" name="비밀번호">
-            </div>
-            <div>
-                <label for="signUp-birthday">생년월일</label>
-                <input id="signUp-birthday" type="date" name="생년월일">
-            </div>
-            <button id="signUp-submit" type="submit">Submit</button>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -88,36 +100,23 @@
     //<![CDATA[
     const isSignIn = [[${isSignIn}]];
     const redirect = [[${redirect}]];
-    const signUpBtn = document.getElementById("signUpBtn");
-    const signInBtn = document.getElementById("signInBtn");
-    const signOutBtn = document.getElementById("signOutBtn");
     const signUpForm = document.getElementById("signUp-form")
     const signInForm = document.getElementById("signIn-form")
+    const signOutForm = document.getElementById("signOut-form")
 
     if (isSignIn) {
-        signOutBtn.style.display = 'inline-block'
+        signOutForm.style.display = 'inline-block'
         if (!!redirect) {
             window.location.href = redirect;
         }
     } else {
-        signUpBtn.style.display = 'inline-block'
-        signInBtn.style.display = 'inline-block'
+        signInForm.style.display = 'inline-block'
     }
 
-    signUpBtn.addEventListener('click', () => {
-        if (signUpForm.style.display === 'none') {
-            signUpForm.style.display = 'block';
-        } else {
-            signUpForm.style.display = 'none';
-        }
-    })
-    signInBtn.addEventListener('click', () => {
-        if (signInForm.style.display === 'none') {
-            signInForm.style.display = 'block';
-        } else {
-            signInForm.style.display = 'none';
-        }
-    })
+    function viewSignUp() {
+        signUpForm.style.display = 'inline-block'
+        signInForm.style.display = 'none'
+    }
 
     signUpForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -148,14 +147,13 @@
         })
     })
 
-    signOutBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        axios.post("/api/sign-out")
-            .then((res) => {
-                console.log(res)
-                location.reload()
-            })
-    })
+   function signOut () {
+     axios.post("/api/sign-out")
+          .then((res) => {
+             console.log(res)
+             location.reload()
+          })
+   }
     //]]>
 </script>
 
